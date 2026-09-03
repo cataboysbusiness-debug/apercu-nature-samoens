@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <rect width="1200" height="630" fill="#FBFAF6"/>
+  <rect x="34" y="34" width="1132" height="562" fill="none" stroke="#14181A" stroke-width="1.6"/>
+  <rect x="42" y="42" width="1116" height="546" fill="none" stroke="#D9D4C6" stroke-width="1.2"/>
+  <rect x="640" y="96" width="238" height="202" fill="#FFFFFF" stroke="#C9C2B0" stroke-width="1.5"/><rect x="902" y="96" width="238" height="202" fill="#FFFFFF" stroke="#C9C2B0" stroke-width="1.5"/><rect x="640" y="322" width="238" height="202" fill="#FFFFFF" stroke="#C9C2B0" stroke-width="1.5"/><rect x="902" y="322" width="238" height="202" fill="#FFFFFF" stroke="#C9C2B0" stroke-width="1.5"/>
+  <g fill="none" stroke="#1C5A3C" stroke-width="1.6" stroke-opacity="0.55" stroke-linecap="round"><path d="M759 268 C 747 214, 769 187, 759 160"/><path d="M759 203.2 q -28 -12 -36 -40 q 30 2 36 40Z"/><path d="M759 176.2 q 28 -12 36 -40 q -30 2 -36 40Z"/><path d="M1021 268 C 1009 203, 1031 170.5, 1021 138"/><path d="M1021 190 q -28 -12 -36 -40 q 30 2 36 40Z"/><path d="M1021 157.5 q 28 -12 36 -40 q -30 2 -36 40Z"/><path d="M759 494 C 747 418, 769 380, 759 342"/><path d="M759 402.8 q -28 -12 -36 -40 q 30 2 36 40Z"/><path d="M759 364.8 q 28 -12 36 -40 q -30 2 -36 40Z"/><path d="M1021 494 C 1009 440, 1031 413, 1021 386"/><path d="M1021 429.2 q -28 -12 -36 -40 q 30 2 36 40Z"/><path d="M1021 402.2 q 28 -12 36 -40 q -30 2 -36 40Z"/></g>
+  <text x="86" y="214" fill="#14181A" font-family="Lora, Georgia, serif" font-size="70">Nature Samoëns</text>
+  <text x="86" y="272" fill="#1C5A3C" font-family="Lora, Georgia, serif" font-size="28" font-style="italic">Le Giffre, le Fer-à-Cheval, la faune et la flore</text>
+  <line x1="86" y1="312" x2="300" y2="312" stroke="#1C5A3C" stroke-width="2.4"/>
+  <text x="86" y="372" fill="#545C57" font-family="Karla, Helvetica, sans-serif" font-size="24">Fiches sourcées · vallée du Giffre, Haute-Savoie</text>
+</svg>

@@ -1,0 +1,2113 @@
+@import "/apercu-nature-samoens/polices/lora.css";
+@import "/apercu-nature-samoens/polices/karla.css";
+
+/* =============================================================================
+   nature-samoens.fr — feuille de style unique.
+
+   LA PLANCHE DE COLLECTION. Le site est le catalogue en ligne d'un muséum :
+   une grille de fiches-spécimens, chacune avec sa photographie, son nom
+   vernaculaire, son binôme latin en italique et son relevé chiffré. La page
+   d'article est une notice : la planche photographique et l'étiquette à
+   gauche, le texte à droite.
+
+   Trois décisions qui traversent toute la feuille :
+
+   1. LA PHOTO EST LE SUJET. Aucune carte n'a de fond décoratif, aucun aplat
+      ne concurrence une image. Le papier est presque blanc pour que les
+      photographies portent seules la couleur de la page.
+   2. Le CADRE, pas la boîte. Les cartes sont encadrées d'un filet d'un
+      cheveu, jamais arrondies, jamais ombrées : une planche d'ouvrage est
+      composée de filets, pas de reliefs.
+   3. La COULEUR CLASSE, elle ne décore pas. Les six tiroirs — faune, flore,
+      eau, roche, sentiers, saisons — ont chacun leur teinte, et cette teinte
+      ne sert qu'à dire de quel tiroir sort la fiche.
+
+   Typographie : Lora porte la notice (sérif de labeur : on lit ce site
+   longuement, pas en diagonale), Karla ne porte que ce qui n'est pas de la prose —
+   étiquettes, relevés, légendes, interface. L'italique est réservé aux
+   binômes latins et au chapeau.
+
+   Ordre : jetons · socle · typo · bandeau · squelette · accueil · planche ·
+   notice · corps de fiche · blocs de contenu · composants · index · pied ·
+   impression.
+   ========================================================================== */
+
+/* --------------------------------------------------------------- 1. jetons --- */
+
+/* Toutes les couleurs du site existent ici, sur `:root` nu. Il n'y a pas de
+   second thème : ce site se lit de jour, avant de partir ou au retour. */
+:root {
+  /* papiers */
+  --papier: #fbfaf7;
+  --papier-2: #f2efe7;
+  --papier-3: #e7e2d6;
+  --carte: #ffffff;
+
+  /* encres */
+  --encre: #16211c;
+  --encre-2: #4c5a52;
+  --encre-3: #5a6860;
+
+  /* accents */
+  --vert: #1b5a3b;
+  --vert-fonce: #14432c;
+  --sur-vert: #fbfaf7;
+  --ocre: #8a5a1e;
+
+  /* lavis : fonds d'encadré, mesurés et non mélangés en direct — un
+     color-mix rend le contraste imprévisible d'un bloc à l'autre. */
+  --lavis-vert: #e8f0e9;
+  --lavis-ocre: #f6eedf;
+  --lavis-bleu: #e7eff4;
+
+  /* filets */
+  --filet: #ddd7c8;
+  --filet-2: #c3bba6;
+
+  /* les six tiroirs de la collection */
+  --t-faune: #a0522d;
+  --t-flore: #7a2e58;
+  --t-eau: #1f5d80;
+  --t-roche: #5e574c;
+  --t-sentier: #3f6b2e;
+  --t-saison: #8a6210;
+
+  --motif-teinte: #33523f;
+
+  --serif: "Lora", Georgia, "Times New Roman", serif;
+  --sans: "Karla", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, sans-serif;
+
+  --marge: clamp(17px, 4.2vw, 60px);
+  --large: 1240px;
+  --colonne: 68ch; /* la mesure d'un paragraphe de notice */
+  --colonne-etroite: 74ch; /* la largeur d'une page de lecture seule */
+  --colonne-etiquette: 360px; /* la colonne gauche de la notice */
+  --ecart-notice: clamp(26px, 3.4vw, 56px);
+
+  --tx: 12.5px;
+  --ts: 14px;
+  --tm: 18.5px;
+  --tl: 21px;
+}
+
+/* ---------------------------------------------------------------- 2. socle --- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: 86px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--papier);
+  color: var(--encre);
+  font-family: var(--serif);
+  font-size: var(--tm);
+  line-height: 1.68;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+img {
+  height: auto;
+  background: var(--papier-3);
+}
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--vert);
+  outline-offset: 3px;
+}
+::selection {
+  background: var(--vert);
+  color: var(--sur-vert);
+}
+
+.saut {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 200;
+  padding: 10px 18px;
+  background: var(--vert);
+  color: var(--sur-vert);
+  font-family: var(--sans);
+  font-size: var(--ts);
+}
+.saut:focus {
+  left: 10px;
+  top: 10px;
+}
+
+/* ----------------------------------------------------------------- 3. typo --- */
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 600;
+  line-height: 1.18;
+  letter-spacing: -0.011em;
+  text-wrap: balance;
+}
+h1 {
+  font-size: clamp(30px, 4.1vw, 48px);
+  line-height: 1.08;
+}
+h2 {
+  font-size: clamp(22px, 2.5vw, 28px);
+}
+h3 {
+  font-size: clamp(18px, 1.9vw, 21px);
+}
+h4 {
+  font-size: 17px;
+}
+
+p {
+  margin: 0 0 1.1em;
+}
+strong {
+  font-weight: 700;
+}
+em,
+i {
+  font-style: italic;
+}
+
+/* Le chapeau : l'italique est la voix de la notice, celle qui présente le
+   spécimen avant qu'on lise sa description. */
+.chapeau {
+  margin: 18px 0 0;
+  font-size: clamp(18px, 1.9vw, 21px);
+  line-height: 1.55;
+  font-style: italic;
+  color: var(--encre-2);
+  max-width: 56ch;
+}
+
+.mention {
+  font-family: var(--sans);
+  font-size: var(--ts);
+  color: var(--encre-2);
+}
+
+.apres-liste {
+  margin: 26px 0 0;
+  font-family: var(--sans);
+  font-size: var(--ts);
+}
+
+/* Le lien de renvoi en fin de page : Karla, souligné franc. */
+.lien-fil {
+  font-family: var(--sans);
+  font-weight: 700;
+  color: var(--vert);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+.lien-fil:hover {
+  color: var(--vert-fonce);
+}
+
+/* -------------------------------------------------------------- 4. bandeau --- */
+
+.bandeau {
+  position: sticky;
+  top: 0;
+  z-index: 80;
+  background: var(--papier);
+  border-bottom: 1px solid transparent;
+  transition:
+    transform 0.24s ease,
+    border-color 0.24s ease;
+}
+.bandeau.est-pose {
+  border-bottom-color: var(--filet-2);
+}
+.bandeau.est-cache {
+  transform: translateY(-100%);
+}
+
+.bandeau__in {
+  max-width: var(--large);
+  margin-inline: auto;
+  padding: 11px var(--marge);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px 26px;
+  flex-wrap: wrap;
+}
+
+/* La marque : l'épingle d'entomologiste, au trait, à côté du nom. */
+.marque {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  text-decoration: none;
+  color: var(--vert);
+}
+.marque svg {
+  width: 24px;
+  height: 24px;
+  flex: none;
+}
+.marque__n {
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  color: var(--encre);
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px 4px;
+  font-family: var(--sans);
+  font-size: var(--ts);
+}
+.nav a {
+  display: inline-block;
+  padding: 5px 9px;
+  color: var(--encre-2);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+}
+.nav a:hover {
+  color: var(--encre);
+  border-bottom-color: var(--filet-2);
+}
+.nav a[aria-current="page"] {
+  color: var(--vert);
+  font-weight: 700;
+  border-bottom-color: var(--vert);
+}
+
+@media (max-width: 720px) {
+  .bandeau__in {
+    padding-block: 9px 4px;
+  }
+  /* Six rubriques ne tiennent pas sur 390 px. Elles défilent plutôt que de
+     doubler la hauteur d'un bandeau collant, et le dégradé de bord dit qu'il
+     y a une suite : une barre coupée net se lit comme une barre cassée. */
+  .nav {
+    width: 100%;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 6px;
+    scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(to right, #000 86%, transparent);
+    mask-image: linear-gradient(to right, #000 86%, transparent);
+  }
+  .nav::-webkit-scrollbar {
+    display: none;
+  }
+  .nav a {
+    white-space: nowrap;
+  }
+}
+
+/* ------------------------------------------------------------ 5. squelette --- */
+
+.cadre {
+  width: 100%;
+  max-width: var(--large);
+  margin-inline: auto;
+  padding-inline: var(--marge);
+}
+
+/* La colonne de lecture seule : les pages qui n'ont pas de planche à montrer
+   (à propos, crédits, index des sujets, 404) se lisent dans une mesure
+   étroite, centrée. */
+.cadre--lecture {
+  max-width: calc(var(--colonne-etroite) + 2 * var(--marge));
+}
+
+/* Séparation de section en filet DOUBLE : la réglure d'un ouvrage gravé,
+   deux traits d'un cheveu séparés de trois pixels. */
+.section {
+  position: relative;
+  padding-block: clamp(40px, 5.4vw, 76px);
+}
+.section::before {
+  content: "";
+  position: absolute;
+  left: var(--marge);
+  right: var(--marge);
+  top: 0;
+  height: 3px;
+  border-top: 1px solid var(--filet-2);
+  border-bottom: 1px solid var(--filet);
+}
+.section--bas {
+  background: var(--papier-2);
+}
+
+/* L'en-tête d'une section : un intitulé, un filet qui court, un compte à
+   droite. C'est l'étiquette collée sur la face d'un tiroir. */
+.rang {
+  display: flex;
+  align-items: baseline;
+  gap: 8px 18px;
+  margin-bottom: clamp(20px, 2.4vw, 32px);
+}
+.rang__t {
+  margin: 0;
+  flex: none;
+}
+.rang__filet {
+  flex: 1 1 40px;
+  align-self: center;
+  height: 3px;
+  min-width: 24px;
+  border-top: 1px solid var(--filet-2);
+  border-bottom: 1px solid var(--filet);
+}
+.rang__m {
+  flex: none;
+  font-family: var(--sans);
+  font-size: var(--ts);
+  font-variant-numeric: tabular-nums;
+  color: var(--encre-2);
+}
+
+/* ---------------------------------------------------------- 6. l'ouverture --- */
+
+/* La plaque d'accueil : le titre à gauche, trois spécimens montés à droite.
+   La page montre des photographies avant de montrer du texte. Aucun aplat,
+   aucun sur-titre, aucun bandeau de chiffres. */
+.plaque {
+  padding-block: clamp(30px, 4.4vw, 62px) clamp(28px, 3.6vw, 48px);
+}
+.plaque__g {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(26px, 3.6vw, 54px);
+  align-items: end;
+}
+@media (min-width: 900px) {
+  .plaque__g {
+    grid-template-columns: minmax(0, 0.94fr) minmax(0, 1.06fr);
+  }
+}
+
+.plaque__mot h1 {
+  max-width: 15ch;
+}
+.plaque__i {
+  margin: 20px 0 0;
+  max-width: 46ch;
+  font-size: 17.5px;
+  line-height: 1.62;
+  color: var(--encre-2);
+}
+/* Le compte de la collection : une ligne de carnet sous un filet, pas un
+   bandeau de chiffres. */
+.plaque__c {
+  margin: 22px 0 0;
+  padding-top: 11px;
+  border-top: 1px solid var(--filet-2);
+  max-width: 46ch;
+  font-family: var(--sans);
+  font-size: var(--ts);
+  font-variant-numeric: tabular-nums;
+  color: var(--encre-2);
+}
+
+/* La vitrine : un triptyque, pas trois vignettes égales.
+   Trois colonnes identiques sont le gabarit d'IA le plus reconnaissable — et
+   une planche de muséum n'accroche jamais trois pièces de même taille. La
+   première domine, les deux autres se rangent à côté d'elle. */
+.plaque__vitrine {
+  display: grid;
+  grid-template-columns: 1.45fr 1fr;
+  /* Hauteur bornee : sans elle, la piece dominante etirait la planche entiere
+     et laissait un vide de 400 px a gauche du texte. Un triptyque se compose
+     dans un cadre, il ne dicte pas la hauteur de la page. */
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  max-height: clamp(16rem, 30vw, 23rem);
+  gap: clamp(9px, 1.2vw, 16px);
+}
+.plaque__vitrine > *:first-child {
+  grid-row: span 2;
+}
+.plaque__vitrine > *:first-child .mont__cadre {
+  height: 100%;
+}
+.plaque__vitrine > *:first-child .mont__img {
+  height: 100%;
+  object-fit: cover;
+}
+
+/* On rogne le CADRE, jamais la figure : `overflow: hidden` sur `.mont`
+   emportait la legende avec l'image, et une planche de museum sans nom
+   d'espece ne sert a rien. */
+.plaque__vitrine .mont {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.plaque__vitrine .mont__cadre {
+  min-height: 0;
+  flex: 1;
+  overflow: hidden;
+}
+
+.plaque__vitrine .mont__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (max-width: 32rem) {
+  .plaque__vitrine {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
+  }
+  .plaque__vitrine > *:first-child {
+    grid-row: auto;
+  }
+}
+.mont {
+  margin: 0;
+}
+.mont__cadre {
+  display: block;
+  padding: 6px;
+  background: var(--carte);
+  border: 1px solid var(--filet-2);
+}
+.mont__cadre img,
+.mont__cadre .motif-img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+.mont__l {
+  margin-top: 8px;
+  font-family: var(--sans);
+  font-size: var(--tx);
+  line-height: 1.4;
+  color: var(--encre-2);
+}
+
+/* ------------------------------------------------------------ 7. la planche --- */
+
+/* La barre de tiroirs. Elle sort `hidden` du gabarit et le script la
+   démasque : sans JavaScript, un bouton de filtre est un bouton mort. Aucune
+   règle ne pose donc `display` sur `.tri` sans `:not([hidden])`. */
+.tri:not([hidden]) {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  margin-bottom: 16px;
+}
+.tri__t {
+  font-family: var(--sans);
+  font-size: var(--tx);
+  font-weight: 700;
+  color: var(--encre-2);
+}
+.tri__b-groupe {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.tri__b {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  padding: 6px 11px;
+  background: var(--carte);
+  border: 1px solid var(--filet-2);
+  border-radius: 0;
+  font-family: var(--sans);
+  font-size: 13.5px;
+  color: var(--encre);
+  cursor: pointer;
+}
+.tri__b:hover {
+  border-color: var(--vert);
+}
+.tri__q {
+  padding-left: 7px;
+  border-left: 1px solid var(--filet);
+  font-size: var(--tx);
+  font-variant-numeric: tabular-nums;
+  color: var(--encre-2);
+}
+.tri__b[aria-pressed="true"] {
+  background: var(--vert);
+  border-color: var(--vert);
+  color: var(--sur-vert);
+}
+.tri__b[aria-pressed="true"] .tri__q {
+  border-left-color: rgba(251, 250, 247, 0.42);
+  color: var(--sur-vert);
+}
+
+.planche__compte {
+  margin: 0 0 16px;
+  font-family: var(--sans);
+  font-size: var(--ts);
+  font-variant-numeric: tabular-nums;
+  color: var(--encre-2);
+}
+
+/* La grille. Deux colonnes sur téléphone, trois au-delà : c'est exactement ce
+   que déclare l'attribut `sizes` des images de fiche, et un décalage entre
+   les deux ferait servir la mauvaise taille de fichier. */
+.planche {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(12px, 1.6vw, 24px);
+}
+@media (min-width: 700px) {
+  .planche {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* La fiche-spécimen. `:not([hidden])` est obligatoire : le tri masque les
+   fiches par l'attribut `hidden`, qu'un `display` d'auteur écraserait. */
+.planche .fiche:not([hidden]) {
+  display: flex;
+  flex-direction: column;
+}
+.planche .fiche {
+  position: relative;
+  margin: 0;
+  background: var(--carte);
+  border: 1px solid var(--filet);
+  border-top: 3px solid var(--filet-2);
+}
+.planche .fiche:hover {
+  border-color: var(--filet-2);
+}
+
+.fiche__cadre {
+  display: block;
+  border-bottom: 1px solid var(--filet);
+}
+.fiche__cadre img,
+.fiche__cadre .motif-img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.fiche__texte {
+  padding: 12px 13px 14px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* Le tiroir d'où sort la fiche : un carré de couleur et un mot. Pas de
+   capitales espacées — c'est une pastille de classement, pas un sur-titre. */
+.fiche__tiroir {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 6px;
+  font-family: var(--sans);
+  font-size: var(--tx);
+  font-weight: 700;
+  color: var(--encre-2);
+}
+.fiche__tiroir::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  flex: none;
+  background: var(--filet-2);
+}
+
+.fiche__nom {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.24;
+  letter-spacing: -0.008em;
+}
+.fiche__lien {
+  text-decoration: none;
+}
+/* Toute la carte est cliquable, mais seul le nom porte le lien : c'est lui
+   qu'un lecteur d'écran annonce. */
+.fiche__lien::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.fiche__lien:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.fiche__latin {
+  margin: 5px 0 0;
+  font-size: 14.5px;
+  line-height: 1.35;
+  color: var(--encre-2);
+}
+.fiche__latin i {
+  font-style: italic;
+}
+
+.fiche__releve {
+  margin: 10px 0 0;
+  padding-top: 8px;
+  border-top: 1px dotted var(--filet-2);
+  font-family: var(--sans);
+  font-size: 13px;
+  line-height: 1.45;
+  font-variant-numeric: tabular-nums;
+  color: var(--encre-2);
+}
+
+/* Les six tiroirs : la couleur classe la fiche, elle ne l'habille pas. */
+.planche .fiche[data-classe="faune"] {
+  border-top-color: var(--t-faune);
+}
+.fiche[data-classe="faune"] .fiche__tiroir {
+  color: var(--t-faune);
+}
+.fiche[data-classe="faune"] .fiche__tiroir::before {
+  background: var(--t-faune);
+}
+.planche .fiche[data-classe="flore"] {
+  border-top-color: var(--t-flore);
+}
+.fiche[data-classe="flore"] .fiche__tiroir {
+  color: var(--t-flore);
+}
+.fiche[data-classe="flore"] .fiche__tiroir::before {
+  background: var(--t-flore);
+}
+.planche .fiche[data-classe="eau"] {
+  border-top-color: var(--t-eau);
+}
+.fiche[data-classe="eau"] .fiche__tiroir {
+  color: var(--t-eau);
+}
+.fiche[data-classe="eau"] .fiche__tiroir::before {
+  background: var(--t-eau);
+}
+.planche .fiche[data-classe="roche"] {
+  border-top-color: var(--t-roche);
+}
+.fiche[data-classe="roche"] .fiche__tiroir {
+  color: var(--t-roche);
+}
+.fiche[data-classe="roche"] .fiche__tiroir::before {
+  background: var(--t-roche);
+}
+.planche .fiche[data-classe="sentier"] {
+  border-top-color: var(--t-sentier);
+}
+.fiche[data-classe="sentier"] .fiche__tiroir {
+  color: var(--t-sentier);
+}
+.fiche[data-classe="sentier"] .fiche__tiroir::before {
+  background: var(--t-sentier);
+}
+.planche .fiche[data-classe="saison"] {
+  border-top-color: var(--t-saison);
+}
+.fiche[data-classe="saison"] .fiche__tiroir {
+  color: var(--t-saison);
+}
+.fiche[data-classe="saison"] .fiche__tiroir::before {
+  background: var(--t-saison);
+}
+
+/* ------------------------------------------------------- 8. les tiroirs --- */
+
+/* Le registre des rubriques : des lignes d'index, pas des cartes. On lit une
+   liste de tiroirs comme on lit le dos d'un meuble à planches. */
+.tiroirs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0 clamp(24px, 3vw, 52px);
+  border-top: 1px solid var(--filet-2);
+}
+@media (min-width: 820px) {
+  .tiroirs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.tiroir {
+  border-bottom: 1px solid var(--filet);
+}
+.tiroir a {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 3px 16px;
+  padding: 15px 2px;
+  text-decoration: none;
+}
+.tiroir a:hover .tiroir__t {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.tiroir__t {
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+.tiroir__d {
+  grid-column: 1;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--encre-2);
+}
+.tiroir__q {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: baseline;
+  font-family: var(--sans);
+  font-size: var(--tx);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--encre-2);
+}
+
+/* ------------------------------------------------------- 9. têtes de page --- */
+
+.tete-page {
+  padding-block: clamp(28px, 3.8vw, 52px) clamp(18px, 2.4vw, 30px);
+  max-width: 60ch;
+}
+.tete-page .fil {
+  margin-bottom: 14px;
+}
+
+/* Le bandeau photographique d'une rubrique : une planche large, montée sur
+   marie-louise, légendée sous le cadre. */
+.bande {
+  margin: 0 0 clamp(10px, 1.6vw, 20px);
+}
+.bande__cadre {
+  display: block;
+  padding: 7px;
+  background: var(--carte);
+  border: 1px solid var(--filet-2);
+}
+.bande__cadre img,
+.bande__cadre .motif-img {
+  width: 100%;
+  aspect-ratio: 16 / 6;
+  object-fit: cover;
+}
+.bande__l {
+  margin-top: 9px;
+  font-family: var(--sans);
+  font-size: var(--tx);
+  line-height: 1.45;
+  color: var(--encre-2);
+}
+.bande__c {
+  display: block;
+  color: var(--encre-3);
+}
+
+/* ---------------------------------------------------------- 10. la notice --- */
+
+/* La page d'article : la planche et l'étiquette à gauche, le texte à droite.
+   La colonne gauche suit la lecture — l'image du spécimen reste sous les
+   yeux pendant qu'on lit sa notice. */
+.notice {
+  padding-block: clamp(24px, 3vw, 40px) clamp(36px, 4.6vw, 64px);
+}
+.notice__g {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--ecart-notice);
+  align-items: start;
+}
+/* Sous 980 px, la colonne gauche se DÉFAIT : la planche passe en tête (la
+   photo reste le sujet), le texte suit, et l'étiquette du spécimen se lit en
+   fin de notice comme une fiche récapitulative. Sans cela, on scrolle une
+   image plein écran ET un tableau avant d'atteindre le titre. */
+@media (max-width: 979px) {
+  .notice__colonne {
+    display: contents;
+  }
+  .planche-tete {
+    order: 1;
+  }
+  .notice__texte {
+    order: 2;
+  }
+  .etiquette {
+    order: 3;
+    margin-top: 0;
+  }
+  .planche-tete__cadre img,
+  .planche-tete__cadre .motif-img {
+    aspect-ratio: 1 / 1;
+  }
+}
+
+@media (min-width: 980px) {
+  .notice__g {
+    grid-template-columns: minmax(0, var(--colonne-etiquette)) minmax(0, 1fr);
+  }
+  .notice__colonne {
+    position: sticky;
+    top: 86px;
+  }
+  /* Le pied de notice s'aligne sous le texte, pas sous l'étiquette. */
+  .notice > .cadre > .notice__bas {
+    margin-left: calc(var(--colonne-etiquette) + var(--ecart-notice));
+  }
+}
+
+.planche-tete {
+  margin: 0;
+}
+.planche-tete__cadre {
+  display: block;
+  padding: 8px;
+  background: var(--carte);
+  border: 1px solid var(--filet-2);
+}
+.planche-tete__cadre img,
+.planche-tete__cadre .motif-img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+.planche-tete__l {
+  margin-top: 10px;
+  font-family: var(--sans);
+  font-size: var(--tx);
+  line-height: 1.45;
+  color: var(--encre-2);
+}
+.planche-tete__c {
+  display: block;
+  margin-top: 3px;
+  color: var(--encre-3);
+}
+
+/* L'étiquette du spécimen : clé à gauche en Karla, valeur à droite en
+   sérif. C'est la fiche cartonnée épinglée sous la planche. */
+.etiquette {
+  margin: clamp(18px, 2.2vw, 26px) 0 0;
+  padding: 4px 13px 6px;
+  background: var(--carte);
+  border: 1px solid var(--filet);
+  border-top: 3px solid var(--vert);
+}
+.etiquette__l {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr);
+  gap: 2px 12px;
+  padding: 9px 0;
+  border-bottom: 1px dotted var(--filet-2);
+}
+.etiquette__l:last-child {
+  border-bottom: 0;
+}
+.etiquette dt {
+  font-family: var(--sans);
+  font-size: var(--tx);
+  font-weight: 700;
+  line-height: 1.5;
+  padding-top: 2px;
+  color: var(--encre-2);
+}
+.etiquette dd {
+  margin: 0;
+  font-size: 15.5px;
+  line-height: 1.45;
+}
+.etiquette dd i {
+  font-style: italic;
+}
+.etiquette dd a {
+  color: var(--vert);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.notice__tete {
+  margin-bottom: clamp(20px, 2.4vw, 30px);
+}
+.notice__tete .fil {
+  margin-bottom: 13px;
+}
+.notice__meta {
+  margin-top: 16px;
+}
+
+.notice__texte .corps {
+  max-width: var(--colonne);
+}
+
+.notice__bas {
+  margin-top: clamp(30px, 4vw, 52px);
+}
+
+/* ------------------------------------------------------ 11. corps de fiche --- */
+
+.corps {
+  max-width: var(--colonne);
+  font-size: var(--tm);
+  line-height: 1.72;
+}
+.corps > :first-child {
+  margin-top: 0;
+}
+.corps h2 {
+  margin: clamp(34px, 4vw, 50px) 0 12px;
+  padding-top: 13px;
+  border-top: 1px solid var(--filet);
+}
+.corps h3 {
+  margin: 30px 0 8px;
+}
+.corps h4 {
+  margin: 24px 0 6px;
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0;
+  color: var(--encre-2);
+}
+.corps ul,
+.corps ol {
+  margin: 0 0 1.1em;
+  padding-left: 1.25em;
+}
+.corps li {
+  margin-bottom: 0.45em;
+}
+.corps li::marker {
+  color: var(--vert);
+}
+
+/* Liens de texte : soulignés fins, jamais colorés seuls. Sur un papier
+   presque blanc, un lien vert non souligné se confond avec du gras. */
+.corps a,
+.encadre a,
+.faq a {
+  color: var(--vert);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.corps a:hover,
+.encadre a:hover,
+.faq a:hover {
+  color: var(--vert-fonce);
+  text-decoration-thickness: 2px;
+}
+
+/* Un lien qui SORT vers un autre site du réseau : souligné pointillé et petite
+   flèche. Il ne doit pas se faire passer pour un renvoi vers une autre fiche
+   de cette collection. */
+.lien-reseau {
+  color: var(--vert);
+  text-decoration: underline dotted;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.lien-reseau::after {
+  content: " ↗";
+  font-family: var(--sans);
+  font-size: 0.82em;
+  color: var(--encre-2);
+}
+.lien-reseau:hover {
+  color: var(--vert-fonce);
+  text-decoration-style: solid;
+}
+
+/* Filet de séparation dans le corps : le double trait de l'ouvrage. */
+hr.filet,
+.filet {
+  height: 3px;
+  margin: clamp(30px, 3.6vw, 44px) 0;
+  border: 0;
+  border-top: 1px solid var(--filet-2);
+  border-bottom: 1px solid var(--filet);
+}
+
+.citation {
+  margin: clamp(26px, 3vw, 36px) 0;
+  padding: 2px 0 2px 20px;
+  border-left: 3px solid var(--vert);
+  font-size: 19px;
+  font-style: italic;
+  line-height: 1.6;
+  color: var(--encre-2);
+}
+.citation p:last-child {
+  margin-bottom: 0;
+}
+
+/* L'exergue : la phrase que le graveur aurait posée entre deux filets. */
+.exergue {
+  margin: clamp(28px, 3.4vw, 42px) 0;
+  padding: 16px 0;
+  border-top: 1px solid var(--filet-2);
+  border-bottom: 1px solid var(--filet-2);
+  font-size: clamp(19px, 2.1vw, 23px);
+  line-height: 1.42;
+  font-weight: 600;
+  text-wrap: balance;
+}
+
+/* --------------------------------------------------- 12. blocs de contenu --- */
+
+/* Encadrés. Trois registres, trois lavis mesurés. L'ocre ne sert qu'aux
+   mises en garde : c'est le seul endroit du site où il porte du texte. */
+.encadre {
+  margin: clamp(26px, 3vw, 38px) 0;
+  padding: 16px 18px 4px;
+  background: var(--papier-2);
+  border: 1px solid var(--filet-2);
+  border-left: 3px solid var(--filet-2);
+}
+.encadre__t {
+  margin: 0 0 8px;
+  font-family: var(--sans);
+  font-size: var(--ts);
+  font-weight: 700;
+  color: var(--encre-2);
+}
+.encadre__c > :last-child {
+  margin-bottom: 0.9em;
+}
+.encadre--note {
+  background: var(--lavis-vert);
+  border-left-color: var(--vert);
+}
+.encadre--note .encadre__t {
+  color: var(--vert);
+}
+.encadre--attention {
+  background: var(--lavis-ocre);
+  border-left-color: var(--ocre);
+}
+.encadre--attention .encadre__t {
+  color: var(--ocre);
+}
+.encadre--astuce {
+  background: var(--lavis-bleu);
+  border-left-color: var(--t-eau);
+}
+.encadre--astuce .encadre__t {
+  color: var(--t-eau);
+}
+
+/* Chiffres clés : le RELEVÉ d'un carnet, une mesure par ligne. Jamais un
+   bandeau de quatre colonnes — c'est la forme que tout le réseau s'interdit,
+   et ce n'est pas comme ça qu'on lit une série de mesures : on la lit en
+   colonne, valeurs alignées, pour comparer deux lignes d'un coup d'œil. */
+.chiffres {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  margin: clamp(26px, 3vw, 38px) 0;
+  border-top: 3px double var(--filet-2);
+  border-bottom: 3px double var(--filet-2);
+}
+.chiffre {
+  display: grid;
+  grid-template-columns: minmax(96px, 30%) minmax(0, 1fr);
+  align-items: baseline;
+  gap: 2px 18px;
+  padding: 11px 0;
+  border-bottom: 1px dotted var(--filet-2);
+}
+.chiffre:last-child {
+  border-bottom: 0;
+}
+.chiffre__v {
+  font-size: clamp(20px, 2.2vw, 25px);
+  font-weight: 600;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.015em;
+  white-space: nowrap;
+}
+.chiffre__l {
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--encre-2);
+}
+
+/* Étapes : le protocole d'observation, numéroté. */
+.etapes {
+  list-style: none;
+  margin: clamp(26px, 3vw, 38px) 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2px;
+}
+.etape {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  gap: 0 14px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--filet);
+}
+.etape:first-child {
+  border-top: 1px solid var(--filet-2);
+}
+.etape__n {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  margin-top: 2px;
+  border: 1px solid var(--vert);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--vert);
+}
+.etape__t {
+  margin: 0;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.etape__d {
+  margin: 4px 0 0;
+  font-size: 16.5px;
+  line-height: 1.55;
+  color: var(--encre-2);
+}
+
+/* Fiche pratique dans le corps : l'étiquette d'herbier, cadre doublé. */
+.fiche-enrobe {
+  margin: clamp(26px, 3vw, 38px) 0;
+  padding: 14px 16px;
+  background: var(--carte);
+  border: 1px solid var(--filet-2);
+  outline: 1px solid var(--filet);
+  outline-offset: 3px;
+}
+.fiche__t {
+  margin: 0 0 10px;
+  padding-bottom: 9px;
+  border-bottom: 1px solid var(--filet);
+  font-family: var(--sans);
+  font-size: var(--ts);
+  font-weight: 700;
+  color: var(--encre-2);
+}
+.fiche-enrobe .fiche {
+  margin: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+}
+.fiche__l {
+  display: grid;
+  grid-template-columns: minmax(0, 34%) minmax(0, 1fr);
+  gap: 2px 14px;
+  padding: 8px 0;
+  border-bottom: 1px dotted var(--filet-2);
+}
+.fiche__l:last-child {
+  border-bottom: 0;
+}
+.fiche__l dt {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.5;
+  padding-top: 2px;
+  color: var(--encre-2);
+}
+.fiche__l dd {
+  margin: 0;
+  font-size: 16.5px;
+  line-height: 1.5;
+}
+
+/* Balance : deux colonnes séparées d'un filet vertical. */
+.balance {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  margin: clamp(26px, 3vw, 38px) 0;
+  border-top: 1px solid var(--filet-2);
+  border-bottom: 1px solid var(--filet-2);
+}
+@media (min-width: 660px) {
+  .balance {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .balance__c--pour {
+    border-right: 1px solid var(--filet);
+  }
+}
+.balance__c {
+  padding: 14px 18px 2px 0;
+}
+.balance__c--contre {
+  padding-left: 18px;
+}
+@media (max-width: 659px) {
+  .balance__c--contre {
+    padding-left: 0;
+    border-top: 1px solid var(--filet);
+  }
+}
+.balance__t {
+  margin: 0 0 8px;
+  font-family: var(--sans);
+  font-size: var(--ts);
+  font-weight: 700;
+  color: var(--vert);
+}
+.balance__c--contre .balance__t {
+  color: var(--ocre);
+}
+.balance__c p:last-child,
+.balance__c ul:last-child {
+  margin-bottom: 0.9em;
+}
+
+/* FAQ : des tiroirs, ouverts ou fermés. */
+.faq {
+  margin: clamp(32px, 3.8vw, 48px) 0;
+}
+.faq > h2 {
+  margin: 0 0 14px;
+  padding-top: 13px;
+  border-top: 1px solid var(--filet);
+}
+.faq__i {
+  border-bottom: 1px solid var(--filet);
+}
+.faq__i:first-of-type {
+  border-top: 1px solid var(--filet-2);
+}
+.faq__i > summary {
+  padding: 13px 26px 13px 0;
+  position: relative;
+  cursor: pointer;
+  list-style: none;
+  font-weight: 600;
+  line-height: 1.45;
+}
+.faq__i > summary::-webkit-details-marker {
+  display: none;
+}
+.faq__i > summary::after {
+  content: "+";
+  position: absolute;
+  right: 2px;
+  top: 12px;
+  font-family: var(--sans);
+  font-size: 19px;
+  line-height: 1;
+  color: var(--vert);
+}
+.faq__i[open] > summary::after {
+  content: "–";
+}
+.faq__r {
+  padding: 0 26px 4px 0;
+  color: var(--encre-2);
+}
+.faq__r > :last-child {
+  margin-bottom: 0.9em;
+}
+
+/* Tableaux — le relevé tabulé. Le défilement appartient au conteneur : un
+   tableau large ne doit pas faire déborder la page. */
+.tableau-enrobe {
+  margin: clamp(26px, 3vw, 38px) 0;
+  overflow-x: auto;
+  border: 1px solid var(--filet-2);
+  background: var(--carte);
+}
+.tableau {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--sans);
+  font-size: var(--ts);
+  font-variant-numeric: tabular-nums;
+}
+.tableau th,
+.tableau td {
+  padding: 10px 13px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--filet);
+}
+.tableau thead th {
+  background: var(--papier-2);
+  border-bottom: 1px solid var(--filet-2);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.tableau tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* Listes du corps. */
+.liste {
+  margin: 0 0 1.1em;
+  padding-left: 1.25em;
+}
+.liste li {
+  margin-bottom: 0.45em;
+}
+.liste--ord {
+  font-variant-numeric: tabular-nums;
+}
+.liste li::marker {
+  color: var(--vert);
+}
+
+/* Figures et galerie. Une figure du corps porte le même cadre qu'une
+   planche : filet, marie-louise, légende en Karla. */
+.fig {
+  margin: clamp(28px, 3.4vw, 44px) 0;
+}
+.fig img,
+.fig .motif-img {
+  width: 100%;
+  border: 1px solid var(--filet-2);
+  padding: 6px;
+  background: var(--carte);
+}
+.fig figcaption {
+  margin-top: 9px;
+  font-family: var(--sans);
+  font-size: var(--tx);
+  line-height: 1.45;
+  color: var(--encre-2);
+}
+.fig__credit {
+  display: block;
+  margin-top: 2px;
+  color: var(--encre-3);
+}
+/* Une image seule sur sa ligne dans le corps : elle prend toute la mesure de
+   lecture, elle ne s'aligne pas sur une colonne de texte plus étroite. */
+.fig--bloc {
+  margin-block: clamp(30px, 3.8vw, 48px);
+}
+.fig--motif .motif-img {
+  aspect-ratio: 16 / 9;
+}
+
+.galerie {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(190px, 100%), 1fr));
+  gap: 14px;
+  margin: clamp(28px, 3.4vw, 44px) 0;
+}
+.galerie .fig {
+  margin: 0;
+}
+.galerie .fig img,
+.galerie .fig .motif-img {
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+/* Image au fil du texte : elle doit tenir dans la ligne. */
+.img-inline {
+  display: inline-block;
+  max-width: 100%;
+  vertical-align: middle;
+}
+.img-inline img,
+.img-inline--motif .motif-img {
+  display: inline-block;
+  max-width: 100%;
+  height: auto;
+}
+.img-inline--motif .motif-img {
+  width: 160px;
+  aspect-ratio: 4 / 3;
+}
+
+/* Code. Il n'a pas de rôle éditorial ici, mais un article peut citer un nom
+   de fichier GPX ou une balise. */
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.88em;
+  padding: 1px 5px;
+  background: var(--papier-2);
+  border: 1px solid var(--filet);
+}
+.bloc-code {
+  margin: clamp(24px, 2.8vw, 34px) 0;
+  padding: 14px 16px;
+  overflow-x: auto;
+  background: var(--papier-2);
+  border: 1px solid var(--filet-2);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.bloc-code code {
+  padding: 0;
+  background: none;
+  border: 0;
+}
+
+/* Bloc générique : un nom de bloc inconnu ne doit pas casser la page. */
+.bloc {
+  margin: clamp(24px, 2.8vw, 34px) 0;
+  padding-left: 16px;
+  border-left: 2px solid var(--filet-2);
+}
+
+/* Notes de bas de fiche. */
+.renvoi {
+  font-family: var(--sans);
+  font-size: 0.72em;
+  line-height: 0;
+}
+.renvoi a {
+  color: var(--vert);
+  text-decoration: none;
+  padding: 0 1px;
+}
+.note-bas {
+  margin: 0 0 0.6em;
+  padding-left: 24px;
+  text-indent: -24px;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--encre-2);
+}
+.note-bas__n {
+  display: inline-block;
+  width: 20px;
+  font-family: var(--sans);
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--vert);
+}
+
+/* ------------------------------------------------------------ 13. gravures --- */
+
+/* Le motif est servi comme MASQUE : le dessin donne l'alpha, la couleur vient
+   du thème. Il n'apparaît que si la banque n'a rien pour la clé demandée. */
+.motif-img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background-color: var(--motif-teinte);
+  -webkit-mask-image: var(--motif);
+  mask-image: var(--motif);
+  -webkit-mask-size: cover;
+  mask-size: cover;
+  -webkit-mask-position: center bottom;
+  mask-position: center bottom;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+.motif-img--tete {
+  aspect-ratio: 16 / 7;
+}
+.motif-img--vignette {
+  aspect-ratio: 4 / 3;
+}
+.motif-img--bandeau {
+  aspect-ratio: 5 / 1;
+}
+.motif-img--carre {
+  aspect-ratio: 1 / 1;
+}
+.motif-img--inline {
+  aspect-ratio: 4 / 3;
+}
+
+/* -------------------------------------------------- 14. composants de site --- */
+
+/* Fil d'Ariane. */
+.fil ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--sans);
+  font-size: var(--tx);
+  color: var(--encre-2);
+}
+.fil li + li::before {
+  content: "→";
+  margin-right: 8px;
+  color: var(--filet-2);
+}
+.fil a {
+  color: var(--encre-2);
+  text-decoration: none;
+  border-bottom: 1px solid var(--filet-2);
+}
+.fil a:hover {
+  color: var(--vert);
+  border-bottom-color: var(--vert);
+}
+.fil [aria-current="page"] {
+  color: var(--encre);
+}
+
+/* Méta d'article. */
+.meta {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px 14px;
+  font-family: var(--sans);
+  font-size: var(--tx);
+  font-variant-numeric: tabular-nums;
+  color: var(--encre-2);
+}
+.meta > * + *::before {
+  content: "·";
+  margin-right: 14px;
+  color: var(--filet-2);
+}
+
+/* Sommaire : la table des matières de la notice. */
+.sommaire {
+  margin: 0 0 clamp(26px, 3vw, 36px);
+  padding: 14px 16px 6px;
+  max-width: var(--colonne);
+  background: var(--papier-2);
+  border: 1px solid var(--filet);
+  border-left: 3px solid var(--filet-2);
+}
+.sommaire__t {
+  margin: 0 0 9px;
+  font-family: var(--sans);
+  font-size: var(--tx);
+  font-weight: 700;
+  color: var(--encre-2);
+}
+.sommaire ol {
+  margin: 0 0 10px;
+  padding: 0;
+  list-style: none;
+  counter-reset: som;
+}
+.sommaire li {
+  counter-increment: som;
+  margin-bottom: 5px;
+  font-size: 15.5px;
+  line-height: 1.45;
+}
+.sommaire li::before {
+  content: counter(som, decimal-leading-zero);
+  display: inline-block;
+  width: 26px;
+  font-family: var(--sans);
+  font-size: var(--tx);
+  font-variant-numeric: tabular-nums;
+  color: var(--encre-3);
+}
+.sommaire a {
+  color: var(--encre);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.sommaire a:hover {
+  border-bottom-color: var(--filet-2);
+}
+.sommaire a[data-actif] {
+  color: var(--vert);
+  font-weight: 700;
+  border-bottom-color: var(--vert);
+}
+
+/* Étiquettes de sujets. */
+.etiquettes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.etiquettes li a,
+.etiquettes li span {
+  display: inline-block;
+  padding: 5px 10px;
+  background: var(--carte);
+  border: 1px solid var(--filet-2);
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--encre-2);
+  text-decoration: none;
+}
+.etiquettes li a {
+  color: var(--vert);
+  font-weight: 700;
+}
+.etiquettes li a:hover {
+  background: var(--vert);
+  border-color: var(--vert);
+  color: var(--sur-vert);
+}
+/* Un sujet sans page reste gris, en pointillé : il ne mène nulle part et ne
+   doit pas se présenter comme un lien. */
+.etiquettes li span {
+  border-style: dashed;
+}
+
+.etiquettes--index {
+  gap: 9px;
+}
+.etiquettes--index li a {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 13px;
+  font-size: var(--ts);
+}
+.etiquettes__q {
+  padding-left: 9px;
+  border-left: 1px solid var(--filet);
+  font-size: var(--tx);
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  color: var(--encre-2);
+}
+.etiquettes--index li a:hover .etiquettes__q {
+  border-left-color: rgba(251, 250, 247, 0.42);
+  color: var(--sur-vert);
+}
+
+/* Sources — le bloc le plus important du site après le corps du texte. */
+.sources {
+  margin: 0 0 clamp(28px, 3.4vw, 40px);
+  padding: 16px 18px 6px;
+  max-width: var(--colonne);
+  background: var(--carte);
+  border: 1px solid var(--filet);
+  border-top: 3px solid var(--vert);
+}
+.sources__t {
+  margin: 0 0 10px;
+  font-family: var(--sans);
+  font-size: var(--ts);
+  font-weight: 700;
+  color: var(--vert);
+}
+.sources ul {
+  margin: 0 0 10px;
+  padding: 0;
+  list-style: none;
+  counter-reset: src;
+}
+.sources li {
+  counter-increment: src;
+  position: relative;
+  margin-bottom: 8px;
+  padding-left: 26px;
+  font-size: 15.5px;
+  line-height: 1.5;
+}
+.sources li::before {
+  content: counter(src);
+  position: absolute;
+  left: 0;
+  top: 1px;
+  font-family: var(--sans);
+  font-size: var(--tx);
+  font-variant-numeric: tabular-nums;
+  color: var(--encre-3);
+}
+.sources a {
+  color: var(--encre);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.sources a:hover {
+  color: var(--vert);
+}
+.sources__h {
+  font-family: var(--sans);
+  font-size: var(--tx);
+  color: var(--encre-2);
+}
+
+/* Sujets de la fiche. */
+.sujets {
+  margin: 0 0 clamp(28px, 3.4vw, 40px);
+}
+.sujets__t {
+  margin: 0 0 11px;
+  font-family: var(--sans);
+  font-size: var(--ts);
+  font-weight: 700;
+  color: var(--encre-2);
+}
+
+/* Dans la même collection. */
+.apparentes {
+  margin: 0 0 clamp(28px, 3.4vw, 40px);
+  padding-top: 15px;
+  border-top: 1px solid var(--filet-2);
+}
+.apparentes__h {
+  margin: 0 0 12px;
+  font-family: var(--sans);
+  font-size: var(--ts);
+  font-weight: 700;
+  color: var(--encre-2);
+}
+.apparentes ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0 clamp(20px, 2.6vw, 40px);
+}
+@media (min-width: 760px) {
+  .apparentes ul {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.apparentes li {
+  border-bottom: 1px solid var(--filet);
+}
+.apparentes li a {
+  display: block;
+  padding: 12px 2px;
+  text-decoration: none;
+}
+.apparentes__t {
+  display: block;
+  font-family: var(--serif);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.apparentes li a:hover .apparentes__t {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.apparentes__d {
+  display: block;
+  margin-top: 3px;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--encre-2);
+}
+
+/* Pagination : la fiche précédente et la suivante, en deux cases. */
+.pagination {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin-top: clamp(28px, 3.4vw, 40px);
+}
+@media (min-width: 660px) {
+  .pagination {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.pagination__l {
+  display: block;
+  padding: 13px 15px;
+  background: var(--carte);
+  border: 1px solid var(--filet);
+  text-decoration: none;
+}
+.pagination__l:hover {
+  border-color: var(--vert);
+}
+.pagination__l--prec {
+  text-align: left;
+}
+.pagination__l--suiv {
+  text-align: right;
+}
+.pagination__l--vide {
+  display: none;
+}
+@media (min-width: 660px) {
+  .pagination__l--vide {
+    display: block;
+    border: 0;
+    background: none;
+  }
+}
+.pagination__s {
+  display: block;
+  font-family: var(--sans);
+  font-size: var(--tx);
+  font-weight: 700;
+  color: var(--encre-2);
+}
+.pagination__t {
+  display: block;
+  margin-top: 4px;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.32;
+}
+
+/* Bloc réseau : discret, contextuel, jamais un annuaire de pied de page. */
+.reseau {
+  margin: 0 0 clamp(28px, 3.4vw, 40px);
+  padding: 14px 16px 4px;
+  background: var(--papier-2);
+  border: 1px solid var(--filet);
+}
+.reseau__t {
+  margin: 0 0 10px;
+  font-family: var(--sans);
+  font-size: var(--tx);
+  font-weight: 700;
+  color: var(--encre-2);
+}
+.reseau ul {
+  list-style: none;
+  margin: 0 0 10px;
+  padding: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 9px;
+}
+.reseau a {
+  text-decoration: none;
+}
+.reseau a strong {
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--filet-2);
+}
+.reseau a:hover strong {
+  border-bottom-color: var(--vert);
+  color: var(--vert);
+}
+.reseau a span {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--sans);
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--encre-2);
+}
+
+/* ------------------------------------------------ 15. index alphabétique --- */
+
+.repertoire {
+  columns: 3 220px;
+  column-gap: clamp(24px, 3vw, 48px);
+}
+.repertoire__g {
+  break-inside: avoid;
+  margin-bottom: 26px;
+}
+.repertoire__l {
+  margin: 0 0 8px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid var(--filet-2);
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--vert);
+}
+.repertoire ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.repertoire li {
+  margin-bottom: 6px;
+  font-size: 16px;
+  line-height: 1.4;
+}
+.repertoire a {
+  color: var(--encre);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.repertoire a:hover {
+  color: var(--vert);
+  border-bottom-color: var(--vert);
+}
+
+/* --------------------------------------------------------------- 16. pied --- */
+
+/* Le pied reste sur du papier : un bandeau sombre en bas d'une planche
+   claire ferait exactement l'aplat que ce réseau s'interdit. */
+.pied {
+  margin-top: clamp(40px, 5vw, 72px);
+  padding-block: clamp(34px, 4vw, 52px) 26px;
+  background: var(--papier-2);
+  border-top: 1px solid var(--filet-2);
+}
+.pied__g {
+  display: grid;
+  gap: clamp(24px, 3vw, 44px);
+  grid-template-columns: repeat(auto-fit, minmax(min(190px, 100%), 1fr));
+}
+.pied__c {
+  min-width: 0;
+}
+.pied__h {
+  margin: 0 0 10px;
+  font-family: var(--sans);
+  font-size: var(--tx);
+  font-weight: 700;
+  color: var(--vert);
+}
+.pied__p {
+  margin: 0 0 9px;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--encre-2);
+}
+.pied__l {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.pied__l li {
+  margin-bottom: 6px;
+  font-size: 14.5px;
+  line-height: 1.4;
+}
+.pied__l a {
+  color: var(--encre-2);
+  text-decoration: none;
+  border-bottom: 1px solid var(--filet-2);
+}
+.pied__l a:hover {
+  color: var(--vert);
+  border-bottom-color: var(--vert);
+}
+.pied__bas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 26px;
+  justify-content: space-between;
+  margin: clamp(26px, 3vw, 40px) 0 0;
+  padding-top: 15px;
+  border-top: 1px solid var(--filet);
+  font-family: var(--sans);
+  font-size: var(--tx);
+  line-height: 1.5;
+  color: var(--encre-2);
+}
+
+/* ------------------------------------------------------------ 17. gabarits --- */
+
+/* L'accueil ouvre sur la plaque : elle n'a pas besoin d'être annoncée par un
+   filet, elle est le haut de la page. */
+.page-accueil .plaque + .section::before {
+  border-top-color: var(--filet-2);
+}
+
+/* La notice a une colonne gauche collante : l'ancre d'un titre doit
+   s'arrêter sous le bandeau, pas dessous. */
+.page-notice {
+  scroll-padding-top: 96px;
+}
+
+/* --------------------------------------------------------- 18. impression --- */
+
+@media print {
+  .bandeau,
+  .pied,
+  .apparentes,
+  .pagination,
+  .reseau,
+  .sommaire,
+  .fil,
+  .tri,
+  .saut {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+    color: #000;
+    font-size: 11pt;
+  }
+  .notice__g,
+  .plaque__g {
+    display: block;
+  }
+  .notice > .cadre > .notice__bas {
+    margin-left: 0;
+  }
+  .corps,
+  .sources,
+  .notice__texte .corps {
+    max-width: none;
+  }
+  .planche {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .planche .fiche,
+  .faq__i,
+  .fiche-enrobe,
+  .tableau-enrobe,
+  .repertoire__g {
+    break-inside: avoid;
+  }
+  .corps a::after {
+    content: " (" attr(href) ")";
+    font-size: 8.5pt;
+    color: #555;
+  }
+}
